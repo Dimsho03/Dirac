@@ -67,3 +67,17 @@ V2rayNG/app/google-services.json
 # Ignore OS-specific files
 Thumbs.db
 .DS_Store
+
+# Dirac private/runtime data
+/backups/
+/external/
+/artifacts/
+/private/
+/secrets/
+.env
+.env.*
+*.keystore
+*.pem
+*.key
+*.p12
+*.pfx
