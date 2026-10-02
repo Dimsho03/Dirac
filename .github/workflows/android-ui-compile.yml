@@ -1,0 +1,32 @@
+name: Android UI compile
+
+on:
+  push:
+    branches:
+      - dirac-android-ui
+  workflow_dispatch:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: V2rayNG
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Compile Playstore debug Kotlin
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:compilePlaystoreDebugKotlin --stacktrace --no-daemon
