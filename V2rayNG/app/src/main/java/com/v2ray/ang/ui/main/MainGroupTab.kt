@@ -1,21 +1,24 @@
 package com.v2ray.ang.ui.main
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.ang.dto.GroupMapItem
 import com.v2ray.ang.dto.entities.ServersCache
@@ -30,20 +33,18 @@ fun GroupTabBar(
     modifier: Modifier = Modifier
 ) {
     val selectedIndex = selectedTabIndex.coerceIn(0, groups.lastIndex)
-    ScrollableTabRow(
-        selectedTabIndex = selectedIndex,
+    LazyRow(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)),
-        edgePadding = 16.dp,
-        indicator = { tabPositions ->
-            TabRowDefaults.SecondaryIndicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
+            .background(MaterialTheme.colorScheme.background)
+            .padding(vertical = 8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        groups.forEachIndexed { index, group ->
+        itemsIndexed(
+            items = groups,
+            key = { _, group -> group.id }
+        ) { index, group ->
             val serverFlow = remember(group.id, mainViewModel) {
                 mainViewModel.serversForGroup(group.id)
             }
@@ -68,22 +69,28 @@ private fun GroupTabItem(
     val text = if (group.id.isEmpty()) {
         group.remarks
     } else {
-        "${group.remarks} (${servers.size})"
+        group.remarks + "  " + servers.size
     }
+    val scheme = MaterialTheme.colorScheme
 
-    Tab(
-        selected = selected,
+    Surface(
         onClick = onClick,
-        modifier = Modifier
-            .widthIn(min = 56.dp)
-            .heightIn(min = 48.dp),
-        text = {
-            Text(
-                text = text,
-                maxLines = 1,
-                softWrap = false,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    )
+        shape = RoundedCornerShape(14.dp),
+        color = if (selected) scheme.primary else scheme.surfaceContainerHigh,
+        contentColor = if (selected) scheme.onPrimary else scheme.onSurfaceVariant,
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (selected) scheme.primary else scheme.outlineVariant
+        )
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
 }
