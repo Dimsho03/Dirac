@@ -246,10 +246,10 @@ fun MainScreen(
                             },
                             onRemoveServer = removeServer,
                             contentPadding = PaddingValues(
-                                start = 0.dp,
-                                top = 0.dp,
-                                end = 0.dp,
-                                bottom = 80.dp
+                                start = 12.dp,
+                                top = 8.dp,
+                                end = 12.dp,
+                                bottom = 96.dp
                             )
                         )
                     }
