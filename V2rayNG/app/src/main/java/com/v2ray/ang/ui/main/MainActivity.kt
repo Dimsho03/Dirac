@@ -24,6 +24,8 @@ import com.v2ray.ang.handler.AngConfigManager
 import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.handler.SettingsChangeManager
 import com.v2ray.ang.handler.SettingsManager
+import com.v2ray.ang.ui.dirac.DiracHomeScreen
+import com.v2ray.ang.ui.dirac.DiracTheme
 import com.v2ray.ang.ui.AboutActivity
 import com.v2ray.ang.ui.backup.BackupActivity
 import com.v2ray.ang.ui.base.HelperBaseComponentActivity
@@ -100,9 +102,10 @@ class MainActivity : HelperBaseComponentActivity() {
     @Composable
     override fun ScreenContent() {
         BackHandler { moveTaskToBack(false) }
-        MainScreen(
-            mainViewModel = mainViewModel,
-            onAction = { action ->
+        DiracTheme {
+            DiracHomeScreen(
+                mainViewModel = mainViewModel,
+                onAction = { action ->
                 when (action) {
                     MainAction.ToggleService -> handleFabAction()
                     MainAction.TestCurrentServer -> handleLayoutTestClick()
@@ -118,9 +121,10 @@ class MainActivity : HelperBaseComponentActivity() {
                     is MainAction.ShareFullContent -> shareFullContentAsync(action.guid)
                     else -> mainViewModel.onAction(action)
                 }
-            },
-            onNavigate = { route -> navigateTo(route) },
-        )
+                },
+                onNavigate = { route -> navigateTo(route) },
+            )
+        }
     }
 
     private fun shareToClipboard(guid: String): Boolean =
