@@ -161,7 +161,7 @@ fun DiracHomeScreen(
                 shape = RoundedCornerShape(18.dp),
                 placeholder = {
                     Text(
-                        text = stringResource(R.string.search),
+                        text = stringResource(R.string.menu_item_search),
                         color = DiracMuted,
                     )
                 },
